@@ -1,7 +1,7 @@
 # BatchLoader
 
 A TypeScript/Javascript class that loads a batch (array) of data from a larger set  
-and hands it to a pagination tool.
+that is too big to be loaded all at once.
 
 
 ## Constructor
@@ -26,13 +26,13 @@ constructor(
     batchCalculator: {
         itemsPerBatch: number;
         currentBatchNumber: number;
-	currentBatchNumberIsLast: boolean;
-	set_currentBatchNumber_basedOnPage: (pageNumber: number) => void;
+        currentBatchNumberIsLast: boolean;
+        set_currentBatchNumber_basedOnPage: (pageNumber: number) => void;
     },
         // Tells `dataSource` what batch to fetch.
 
     batchContainer: { data: any[] }
-        // `batchContainer` is injected so it can be accessed by a paginator outside of this class.
+        // `batchContainer` is injected so it can be manipulated outside of this class.
 ) 
 ```
 </details>
@@ -43,7 +43,7 @@ constructor(
 <summary>view properties</summary>
 
 ```ts
-itemsPerBatch: integer
+itemsPerBatch: number
     // The number of items `dataSource.getData()` will return.
 ```
 </details>
@@ -55,6 +55,10 @@ itemsPerBatch: integer
 
 ```ts
 loadBatchContainingPage(pageNumber): void
+    // Gets that batch and stores it in `batchContainer.data`, the parameter 
+    // in the constructor.  batchContainer is a private property here, so 
+    // you must access its instance outside of this class in order to 
+    // manipulate the data in the batch.
 ```
 The methods below are not important to know about in order to use this  
 class.  They're inherited from [BaseClass](https://github.com/writetome51/typescript-base-class#baseclass) .

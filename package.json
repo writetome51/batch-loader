@@ -1,7 +1,7 @@
 {
   "name": "@writetome51/batch-loader",
   "version": "1.0.0",
-  "description": "A TypeScript/JavaScript class that loads a batch of data from a larger set, and hands it to a pagination tool",
+  "description": "A TypeScript/Javascript class that loads a batch (array) of data from a larger set that is too big to be loaded all at once.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -15,8 +15,9 @@
     "data",
     "load",
     "retrieve",
+    "batch",
+    "batches",
     "paginator",
-    "pagination",
     "app",
     "typescript",
     "class"
