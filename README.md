@@ -6,8 +6,7 @@ paginator or any other kind of manipulation tool.
 
 
 ## Constructor
-3 objects must be passed to the constructor, and they must follow the interfaces  
-specified.
+3 objects must be injected in the constructor.
 <details>
 <summary>view constructor</summary>
 
@@ -63,8 +62,7 @@ loadBatch(batchNumber): void
 
 loadBatchContainingPage(pageNumber): void
     // Useful if you intend to use the batch for pagination.
-    // Gets the batch containing `pageNumber` and stores it in `batchContainer.data`,
-    // the parameter in the constructor.
+    // Gets the batch containing `pageNumber` and stores it in `batchContainer.data`
 ```
 The methods below are not important to know about in order to use this  
 class.  They're inherited from [BaseClass](https://github.com/writetome51/typescript-base-class#baseclass) .
