@@ -32,5 +32,5 @@ export declare class BatchLoader extends BaseClass {
 
 
 	private __getBatchContainingPage;
-	private __getBatch;
+
 }
