@@ -20,7 +20,7 @@ var BatchLoader = /** @class */ (function (_super) {
     function BatchLoader(__dataSource, 
     // `__batchCalculator` tells this.__dataSource what batch to fetch.
     __batchCalculator, 
-    // `__batchContainer` is injected so it can be accessed by a paginator outside of this class.
+    // `__batchContainer` is injected so it can also be manipulated outside of this class.
     __batchContainer) {
         var _this = _super.call(this) || this;
         _this.__dataSource = __dataSource;
@@ -44,9 +44,6 @@ var BatchLoader = /** @class */ (function (_super) {
     };
     BatchLoader.prototype.__getBatchContainingPage = function (pageNumber) {
         this.__batchCalculator.set_currentBatchNumber_basedOnPage(pageNumber);
-        return this.__getBatch();
-    };
-    BatchLoader.prototype.__getBatch = function () {
         return this.__dataSource.getBatch(this.__batchCalculator.currentBatchNumber, this.itemsPerBatch, this.__batchCalculator.currentBatchNumberIsLast);
     };
     return BatchLoader;

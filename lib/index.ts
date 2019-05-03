@@ -31,7 +31,7 @@ export class BatchLoader extends BaseClass {
 			set_currentBatchNumber_basedOnPage: (pageNumber: number) => void;
 		},
 
-		// `__batchContainer` is injected so it can be accessed by a paginator outside of this class.
+		// `__batchContainer` is injected so it can also be manipulated outside of this class.
 
 		private __batchContainer: { data: any[] }
 	) {
@@ -57,11 +57,7 @@ export class BatchLoader extends BaseClass {
 
 	private __getBatchContainingPage(pageNumber): any[] {
 		this.__batchCalculator.set_currentBatchNumber_basedOnPage(pageNumber);
-		return this.__getBatch();
-	}
 
-
-	private __getBatch(): any[] {
 		return this.__dataSource.getBatch(
 
 			this.__batchCalculator.currentBatchNumber,
