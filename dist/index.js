@@ -17,9 +17,7 @@ var base_class_1 = require("@writetome51/base-class");
 var set_array_1 = require("@writetome51/set-array");
 var BatchLoader = /** @class */ (function (_super) {
     __extends(BatchLoader, _super);
-    function BatchLoader(
-    // The same `__dataSource` object must be injected into this.__batchCalculator .
-    __dataSource, 
+    function BatchLoader(__dataSource, 
     // `__batchCalculator` tells this.__dataSource what batch to fetch.
     __batchCalculator, 
     // `__batchContainer` is injected so it can be accessed by a paginator outside of this class.

@@ -7,8 +7,6 @@ export class BatchLoader extends BaseClass {
 
 	constructor(
 
-		// The same `__dataSource` object must be injected into this.__batchCalculator .
-
 		private __dataSource: {
 
 			// `getBatch()` is called whenever a new batch is loaded.  The number of items it returns
@@ -28,8 +26,8 @@ export class BatchLoader extends BaseClass {
 		private __batchCalculator: {
 			itemsPerPage: number; // set_currentBatchNumber_basedOnPage() needs this to work correctly.
 			itemsPerBatch: number;
-			currentBatchNumber: number;
-			currentBatchNumberIsLast: boolean;
+			readonly currentBatchNumber: number;
+			readonly currentBatchNumberIsLast: boolean;
 			set_currentBatchNumber_basedOnPage: (pageNumber: number) => void;
 		},
 

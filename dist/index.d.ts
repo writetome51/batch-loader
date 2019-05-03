@@ -9,14 +9,14 @@ export declare class BatchLoader extends BaseClass {
 
 	constructor(
 		__dataSource: {
-			getData: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
+			getBatch: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
 			dataTotal: number;
 		},
 		__batchCalculator: {
 			itemsPerPage: number;
 			itemsPerBatch: number;
-			currentBatchNumber: number;
-			currentBatchNumberIsLast: boolean;
+			readonly currentBatchNumber: number;
+			readonly currentBatchNumberIsLast: boolean;
 			set_currentBatchNumber_basedOnPage: (pageNumber: number) => void;
 		},
 		__batchContainer: {
@@ -28,7 +28,7 @@ export declare class BatchLoader extends BaseClass {
 	itemsPerBatch: number;
 
 
-	loadBatchContainingPage(pageNumber: any): void;
+	loadBatchContainingPage(pageNumber: number): void;
 
 
 	private __getBatchContainingPage;

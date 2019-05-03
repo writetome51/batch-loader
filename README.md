@@ -6,6 +6,8 @@ paginator or any other kind of manipulation tool.
 
 
 ## Constructor
+3 objects must be passed to the constructor, and these objects must follow the  
+requirements specified in order for the class to work.
 <details>
 <summary>view constructor</summary>
 
@@ -15,9 +17,9 @@ constructor(
     dataSource: {
 
         getBatch: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
-            // `getBatch()` returns 1 batch, and is called whenever a new batch must be loaded.  
-            // The number of items it returns matches `itemsPerBatch`.  If `isLastBatch` is 
-            // true, it only returns the remaining items in the dataset, and ignores itemsPerBatch.
+            // `getBatch()` is called whenever a new batch must be loaded.  The number of items it 
+            // returns matches `itemsPerBatch`.  If `isLastBatch` is true, it only returns the 
+            // remaining items in the dataset, and ignores itemsPerBatch.
 
         dataTotal: number;
             // Number of items in entire dataset, not the batch.
@@ -27,8 +29,8 @@ constructor(
     batchCalculator: {
         itemsPerPage: number; // `set_currentBatchNumber_basedOnPage()` needs this to work correctly.
         itemsPerBatch: number;
-        currentBatchNumber: number;
-        currentBatchNumberIsLast: boolean;
+        currentBatchNumber: number; // read-only
+        currentBatchNumberIsLast: boolean; // read-only
         set_currentBatchNumber_basedOnPage: (pageNumber: number) => void;
             // Useful if you intend to use the batch for pagination.  Figures out batch that 
             // contains `pageNumber` and assigns it to `currentBatchNumber`.
@@ -36,7 +38,7 @@ constructor(
         // Tells `dataSource` what batch to fetch.
 
     batchContainer: { data: any[] }
-        // `batchContainer` is injected so it can be manipulated outside of this class.
+        // `batchContainer` is injected so it can also be manipulated outside of this class.
 ) 
 ```
 </details>
@@ -62,8 +64,8 @@ loadBatchContainingPage(pageNumber): void
     // Useful if you intend to use the batch for pagination.
     // Gets the batch containing `pageNumber` and stores it in `batchContainer.data`,
     // the parameter in the constructor.  batchContainer is a private property here, 
-    // so you must access its instance outside of this class in order to manipulate 
-    // the data in the batch.
+    // so you must make its instance accessible outside of this class in order to 
+    // manipulate the data in the batch.
 ```
 The methods below are not important to know about in order to use this  
 class.  They're inherited from [BaseClass](https://github.com/writetome51/typescript-base-class#baseclass) .
