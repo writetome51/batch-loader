@@ -11,11 +11,11 @@ export class BatchLoader extends BaseClass {
 
 		private __dataSource: {
 
-			// `getData()` is called whenever a new batch is loaded.  The number of items it returns
+			// `getBatch()` is called whenever a new batch is loaded.  The number of items it returns
 			// matches `itemsPerBatch`.  If `isLastBatch` is true, it only returns the remaining items
 			// in the dataset, and ignores itemsPerBatch.
 
-			getData: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
+			getBatch: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
 
 			// `dataTotal`: number of items in entire dataset, not the batch.
 			// This must stay accurate after actions that change the total, such as searches.
@@ -26,6 +26,7 @@ export class BatchLoader extends BaseClass {
 		// `__batchCalculator` tells this.__dataSource what batch to fetch.
 
 		private __batchCalculator: {
+			itemsPerPage: number; // set_currentBatchNumber_basedOnPage() needs this to work correctly.
 			itemsPerBatch: number;
 			currentBatchNumber: number;
 			currentBatchNumberIsLast: boolean;
@@ -63,7 +64,7 @@ export class BatchLoader extends BaseClass {
 
 
 	private __getBatch(): any[] {
-		return this.__dataSource.getData(
+		return this.__dataSource.getBatch(
 
 			this.__batchCalculator.currentBatchNumber,
 			this.itemsPerBatch,

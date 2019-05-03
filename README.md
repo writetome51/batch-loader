@@ -1,7 +1,8 @@
 # BatchLoader
 
 A TypeScript/Javascript class that loads a batch (array) of data from a larger set  
-that is too big to be loaded all at once.
+that is too big to be loaded all at once.  This batch can then be used by a  
+paginator or any other kind of manipulation tool.
 
 
 ## Constructor
@@ -13,10 +14,10 @@ constructor(
 
     dataSource: {
 
-        getData: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
-            // `getData()` is called whenever a new batch is loaded.  The number of items it returns
-            // matches `itemsPerBatch`.  If `isLastBatch` is true, it only returns the remaining items
-            // in the dataset, and ignores itemsPerBatch.
+        getBatch: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
+            // `getBatch()` returns 1 batch, and is called whenever a new batch must be loaded.  
+            // The number of items it returns matches `itemsPerBatch`.  If `isLastBatch` is 
+            // true, it only returns the remaining items in the dataset, and ignores itemsPerBatch.
 
         dataTotal: number;
             // Number of items in entire dataset, not the batch.
@@ -24,10 +25,13 @@ constructor(
     },
 
     batchCalculator: {
+        itemsPerPage: number; // `set_currentBatchNumber_basedOnPage()` needs this to work correctly.
         itemsPerBatch: number;
         currentBatchNumber: number;
         currentBatchNumberIsLast: boolean;
         set_currentBatchNumber_basedOnPage: (pageNumber: number) => void;
+            // Useful if you intend to use the batch for pagination.  Figures out batch that 
+            // contains `pageNumber` and assigns it to `currentBatchNumber`.
     },
         // Tells `dataSource` what batch to fetch.
 
@@ -44,7 +48,7 @@ constructor(
 
 ```ts
 itemsPerBatch: number
-    // The number of items `dataSource.getData()` will return.
+    // The number of items `batchContainer.data` will contain.
 ```
 </details>
 
@@ -55,10 +59,11 @@ itemsPerBatch: number
 
 ```ts
 loadBatchContainingPage(pageNumber): void
-    // Gets that batch and stores it in `batchContainer.data`, the parameter 
-    // in the constructor.  batchContainer is a private property here, so 
-    // you must access its instance outside of this class in order to 
-    // manipulate the data in the batch.
+    // Useful if you intend to use the batch for pagination.
+    // Gets the batch containing `pageNumber` and stores it in `batchContainer.data`,
+    // the parameter in the constructor.  batchContainer is a private property here, 
+    // so you must access its instance outside of this class in order to manipulate 
+    // the data in the batch.
 ```
 The methods below are not important to know about in order to use this  
 class.  They're inherited from [BaseClass](https://github.com/writetome51/typescript-base-class#baseclass) .

@@ -49,7 +49,7 @@ var BatchLoader = /** @class */ (function (_super) {
         return this.__getBatch();
     };
     BatchLoader.prototype.__getBatch = function () {
-        return this.__dataSource.getData(this.__batchCalculator.currentBatchNumber, this.itemsPerBatch, this.__batchCalculator.currentBatchNumberIsLast);
+        return this.__dataSource.getBatch(this.__batchCalculator.currentBatchNumber, this.itemsPerBatch, this.__batchCalculator.currentBatchNumberIsLast);
     };
     return BatchLoader;
 }(base_class_1.BaseClass));
