@@ -17,15 +17,17 @@ var base_class_1 = require("@writetome51/base-class");
 var set_array_1 = require("@writetome51/set-array");
 var BatchLoader = /** @class */ (function (_super) {
     __extends(BatchLoader, _super);
-    function BatchLoader(__dataSource, 
-    // `__batchCalculator` tells this.__dataSource what batch to fetch.
-    __batchCalculator, 
+    function BatchLoader(
+    // Same instance of `__dataSource` must also be injected into `__batchCalculator`.
+    __dataSource, 
     // `__batchContainer` is injected so it can also be manipulated outside of this class.
-    __batchContainer) {
+    __batchContainer, 
+    // `__batchCalculator` tells this.__dataSource what batch to fetch.
+    __batchCalculator) {
         var _this = _super.call(this) || this;
         _this.__dataSource = __dataSource;
-        _this.__batchCalculator = __batchCalculator;
         _this.__batchContainer = __batchContainer;
+        _this.__batchCalculator = __batchCalculator;
         return _this;
     }
     Object.defineProperty(BatchLoader.prototype, "itemsPerBatch", {
@@ -38,6 +40,11 @@ var BatchLoader = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    BatchLoader.prototype.loadBatch = function (batchNumber) {
+        var pageNumber = ((this.__batchCalculator.pagesPerBatch * batchNumber)
+            - (this.__batchCalculator.pagesPerBatch - 1));
+        this.loadBatchContainingPage(pageNumber);
+    };
     BatchLoader.prototype.loadBatchContainingPage = function (pageNumber) {
         var batch = this.__getBatchContainingPage(pageNumber);
         set_array_1.setArray(this.__batchContainer.data, batch);

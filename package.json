@@ -1,6 +1,6 @@
 {
   "name": "@writetome51/batch-loader",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A TypeScript/Javascript class that loads a batch (array) of data from a larger set that is too big to be loaded all at once.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,10 +28,10 @@
     "url": "https://github.com/writetome51/batch-loader/issues"
   },
   "homepage": "https://github.com/writetome51/batch-loader#readme",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "@writetome51/base-class": "~0.0.3",
+    "@writetome51/batch-calculator": "~1.0.0",
     "@writetome51/set-array": "~1.0.2"
   }
 }

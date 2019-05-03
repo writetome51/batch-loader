@@ -6,8 +6,8 @@ paginator or any other kind of manipulation tool.
 
 
 ## Constructor
-3 objects must be passed to the constructor, and these objects must follow the  
-requirements specified in order for the class to work.
+3 objects must be passed to the constructor, and they must follow the interfaces  
+specified.
 <details>
 <summary>view constructor</summary>
 
@@ -15,6 +15,7 @@ requirements specified in order for the class to work.
 constructor(
 
     dataSource: {
+        // same instance of dataSource must also be injected into `batchCalculator`.
 
         getBatch: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
             // `getBatch()` is called whenever a new batch must be loaded.  The number of items it 
@@ -26,19 +27,14 @@ constructor(
             // This must stay accurate after actions that change the total, such as searches.
     },
 
-    batchCalculator: {
-        itemsPerPage: number; // `set_currentBatchNumber_basedOnPage()` needs this to work correctly.
-        itemsPerBatch: number;
-        currentBatchNumber: number; // read-only
-        currentBatchNumberIsLast: boolean; // read-only
-        set_currentBatchNumber_basedOnPage: (pageNumber: number) => void;
-            // Useful if you intend to use the batch for pagination.  Figures out batch that 
-            // contains `pageNumber` and assigns it to `currentBatchNumber`.
-    },
+    batchContainer: { data: any[] },
+        // `batchContainer` is injected so it can also be used outside of this class.
+        // It's kept as a private property here, so you must make it accessible outside of this 
+        // class in order to manipulate it.
+        
+    batchCalculator: BatchCalculator
         // Tells `dataSource` what batch to fetch.
-
-    batchContainer: { data: any[] }
-        // `batchContainer` is injected so it can also be manipulated outside of this class.
+        // BatchCalculator is included as a package dependency.
 ) 
 ```
 </details>
@@ -51,6 +47,7 @@ constructor(
 ```ts
 itemsPerBatch: number
     // The number of items `batchContainer.data` will contain.
+    // Gives public read/write access to `batchCalculator.itemsPerBatch`.
 ```
 </details>
 
@@ -60,12 +57,14 @@ itemsPerBatch: number
 <summary>view methods</summary>
 
 ```ts
+loadBatch(batchNumber): void
+    // Gets the batch and stores it in `batchContainer.data`,
+    // the parameter in the constructor.
+
 loadBatchContainingPage(pageNumber): void
     // Useful if you intend to use the batch for pagination.
     // Gets the batch containing `pageNumber` and stores it in `batchContainer.data`,
-    // the parameter in the constructor.  batchContainer is a private property here, 
-    // so you must make its instance accessible outside of this class in order to 
-    // manipulate the data in the batch.
+    // the parameter in the constructor.
 ```
 The methods below are not important to know about in order to use this  
 class.  They're inherited from [BaseClass](https://github.com/writetome51/typescript-base-class#baseclass) .

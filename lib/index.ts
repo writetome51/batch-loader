@@ -1,4 +1,5 @@
 import { BaseClass } from '@writetome51/base-class';
+import { BatchCalculator } from '@writetome51/batch-calculator';
 import { setArray } from '@writetome51/set-array';
 
 
@@ -6,6 +7,8 @@ export class BatchLoader extends BaseClass {
 
 
 	constructor(
+
+		// Same instance of `__dataSource` must also be injected into `__batchCalculator`.
 
 		private __dataSource: {
 
@@ -21,19 +24,13 @@ export class BatchLoader extends BaseClass {
 			dataTotal: number;
 		},
 
-		// `__batchCalculator` tells this.__dataSource what batch to fetch.
-
-		private __batchCalculator: {
-			itemsPerPage: number; // set_currentBatchNumber_basedOnPage() needs this to work correctly.
-			itemsPerBatch: number;
-			readonly currentBatchNumber: number;
-			readonly currentBatchNumberIsLast: boolean;
-			set_currentBatchNumber_basedOnPage: (pageNumber: number) => void;
-		},
-
 		// `__batchContainer` is injected so it can also be manipulated outside of this class.
 
-		private __batchContainer: { data: any[] }
+		private __batchContainer: { data: any[] },
+
+		// `__batchCalculator` tells this.__dataSource what batch to fetch.
+
+		private __batchCalculator: BatchCalculator
 	) {
 		super();
 	}
@@ -46,6 +43,15 @@ export class BatchLoader extends BaseClass {
 
 	get itemsPerBatch(): number {
 		return this.__batchCalculator.itemsPerBatch;
+	}
+
+
+	loadBatch(batchNumber): void {
+		let pageNumber = (
+			(this.__batchCalculator.pagesPerBatch * batchNumber)  
+			- (this.__batchCalculator.pagesPerBatch - 1)
+		);
+		this.loadBatchContainingPage(pageNumber);
 	}
 
 
