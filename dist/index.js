@@ -1,48 +1,19 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var base_class_1 = require("@writetome51/base-class");
 var set_array_1 = require("@writetome51/set-array");
-var BatchLoader = /** @class */ (function (_super) {
-    __extends(BatchLoader, _super);
-    function BatchLoader(
-    // Same instance of `__dataSource` must also be injected into `__batchCalculator`.
-    __dataSource, 
-    // `__batchContainer` is injected so it can also be manipulated outside of this class.
-    __batchContainer, 
-    // `__batchCalculator` tells this.__dataSource what batch to fetch.
-    __batchCalculator) {
-        var _this = _super.call(this) || this;
-        _this.__dataSource = __dataSource;
-        _this.__batchContainer = __batchContainer;
-        _this.__batchCalculator = __batchCalculator;
-        return _this;
+var BatchLoader = /** @class */ (function () {
+    function BatchLoader(__dataSource, __batchContainer, 
+    // `__batchInfo` tells this.__dataSource what batch to fetch.
+    __batchInfo, __bch2pgTranslator) {
+        this.__dataSource = __dataSource;
+        this.__batchContainer = __batchContainer;
+        this.__batchInfo = __batchInfo;
+        this.__bch2pgTranslator = __bch2pgTranslator;
     }
-    Object.defineProperty(BatchLoader.prototype, "itemsPerBatch", {
-        get: function () {
-            return this.__batchCalculator.itemsPerBatch;
-        },
-        set: function (value) {
-            this.__batchCalculator.itemsPerBatch = value; // __batchCalculator validates value.
-        },
-        enumerable: true,
-        configurable: true
-    });
     BatchLoader.prototype.loadBatch = function (batchNumber) {
-        var pageNumber = ((this.__batchCalculator.pagesPerBatch * batchNumber)
-            - (this.__batchCalculator.pagesPerBatch - 1));
+        // Gets the number of the first page of batchNumber.
+        var pageNumber = ((this.__batchInfo.pagesPerBatch * batchNumber)
+            - (this.__batchInfo.pagesPerBatch - 1));
         this.loadBatchContainingPage(pageNumber);
     };
     BatchLoader.prototype.loadBatchContainingPage = function (pageNumber) {
@@ -50,9 +21,9 @@ var BatchLoader = /** @class */ (function (_super) {
         set_array_1.setArray(this.__batchContainer.data, batch);
     };
     BatchLoader.prototype.__getBatchContainingPage = function (pageNumber) {
-        this.__batchCalculator.set_currentBatchNumber_basedOnPage(pageNumber);
-        return this.__dataSource.getBatch(this.__batchCalculator.currentBatchNumber, this.itemsPerBatch, this.__batchCalculator.currentBatchNumberIsLast);
+        this.__bch2pgTranslator.set_currentBatchNumber_toBatchContainingPage(pageNumber);
+        return this.__dataSource.getBatch(this.__batchInfo.currentBatchNumber, this.__batchInfo.itemsPerBatch, this.__batchInfo.currentBatchNumberIsLast);
     };
     return BatchLoader;
-}(base_class_1.BaseClass));
+}());
 exports.BatchLoader = BatchLoader;

@@ -1,14 +1,11 @@
-import { BaseClass } from '@writetome51/base-class';
-import { BatchCalculator } from '@writetome51/batch-calculator';
+import { BatchToPageTranslator } from '@writetome51/batch-to-page-translator';
 import { setArray } from '@writetome51/set-array';
 
 
-export class BatchLoader extends BaseClass {
+export class BatchLoader {
 
 
 	constructor(
-
-		// Same instance of `__dataSource` must also be injected into `__batchCalculator`.
 
 		private __dataSource: {
 
@@ -24,32 +21,25 @@ export class BatchLoader extends BaseClass {
 			dataTotal: number;
 		},
 
-		// `__batchContainer` is injected so it can also be manipulated outside of this class.
-
 		private __batchContainer: { data: any[] },
 
-		// `__batchCalculator` tells this.__dataSource what batch to fetch.
+		// `__batchInfo` tells this.__dataSource what batch to fetch.
 
-		private __batchCalculator: BatchCalculator
+		private __batchInfo: {
+			itemsPerBatch: number, currentBatchNumber: number,
+			currentBatchNumberIsLast: boolean, pagesPerBatch: number
+		},
+
+		private __bch2pgTranslator: BatchToPageTranslator
 	) {
-		super();
-	}
-
-
-	set itemsPerBatch(value) {
-		this.__batchCalculator.itemsPerBatch = value;  // __batchCalculator validates value.
-	}
-
-
-	get itemsPerBatch(): number {
-		return this.__batchCalculator.itemsPerBatch;
 	}
 
 
 	loadBatch(batchNumber): void {
+		// Gets the number of the first page of batchNumber.
 		let pageNumber = (
-			(this.__batchCalculator.pagesPerBatch * batchNumber)  
-			- (this.__batchCalculator.pagesPerBatch - 1)
+			(this.__batchInfo.pagesPerBatch * batchNumber)
+			- (this.__batchInfo.pagesPerBatch - 1)
 		);
 		this.loadBatchContainingPage(pageNumber);
 	}
@@ -62,13 +52,12 @@ export class BatchLoader extends BaseClass {
 
 
 	private __getBatchContainingPage(pageNumber): any[] {
-		this.__batchCalculator.set_currentBatchNumber_basedOnPage(pageNumber);
+		this.__bch2pgTranslator.set_currentBatchNumber_toBatchContainingPage(pageNumber);
 
 		return this.__dataSource.getBatch(
-
-			this.__batchCalculator.currentBatchNumber,
-			this.itemsPerBatch,
-			this.__batchCalculator.currentBatchNumberIsLast
+			this.__batchInfo.currentBatchNumber,
+			this.__batchInfo.itemsPerBatch,
+			this.__batchInfo.currentBatchNumberIsLast
 		);
 	}
 
