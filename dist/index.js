@@ -11,10 +11,9 @@ var BatchLoader = /** @class */ (function () {
         this.__bch2pgTranslator = __bch2pgTranslator;
     }
     BatchLoader.prototype.loadBatch = function (batchNumber) {
-        // Gets the number of the first page of batchNumber.
-        var pageNumber = ((this.__batchInfo.pagesPerBatch * batchNumber)
+        var firstPageInBatch = ((this.__batchInfo.pagesPerBatch * batchNumber)
             - (this.__batchInfo.pagesPerBatch - 1));
-        this.loadBatchContainingPage(pageNumber);
+        this.loadBatchContainingPage(firstPageInBatch);
     };
     BatchLoader.prototype.loadBatchContainingPage = function (pageNumber) {
         var batch = this.__getBatchContainingPage(pageNumber);

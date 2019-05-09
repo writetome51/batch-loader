@@ -36,12 +36,11 @@ export class BatchLoader {
 
 
 	loadBatch(batchNumber): void {
-		// Gets the number of the first page of batchNumber.
-		let pageNumber = (
+		let firstPageInBatch = (
 			(this.__batchInfo.pagesPerBatch * batchNumber)
 			- (this.__batchInfo.pagesPerBatch - 1)
 		);
-		this.loadBatchContainingPage(pageNumber);
+		this.loadBatchContainingPage(firstPageInBatch);
 	}
 
 

@@ -1,14 +1,12 @@
-import { BaseClass } from '@writetome51/base-class';
-import { BatchCalculator } from '@writetome51/batch-calculator';
+import { BatchToPageTranslator } from '@writetome51/batch-to-page-translator';
 
 
-export declare class BatchLoader extends BaseClass {
-
-	itemsPerBatch: number;
+export declare class BatchLoader {
 
 	private __dataSource;
 	private __batchContainer;
-	private __batchCalculator;
+	private __batchInfo;
+	private __bch2pgTranslator;
 
 
 	constructor(
@@ -19,7 +17,13 @@ export declare class BatchLoader extends BaseClass {
 		__batchContainer: {
 			data: any[];
 		},
-		__batchCalculator: BatchCalculator
+		__batchInfo: {
+			itemsPerBatch: number;
+			currentBatchNumber: number;
+			currentBatchNumberIsLast: boolean;
+			pagesPerBatch: number;
+		},
+		__bch2pgTranslator: BatchToPageTranslator
 	);
 
 
@@ -30,4 +34,5 @@ export declare class BatchLoader extends BaseClass {
 
 
 	private __getBatchContainingPage;
+
 }
