@@ -17,8 +17,7 @@ export class PageBatchGetter {
 			getBatch: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
 		},
 		private __batchInfo: {
-			itemsPerBatch: number, currentBatchNumber: number,
-			currentBatchNumberIsLast: boolean
+			currentBatchNumber: number, itemsPerBatch: number, currentBatchNumberIsLast: boolean
 		},
 		private __bch2pgTranslator: BatchToPageTranslator
 	) {
