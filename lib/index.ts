@@ -2,7 +2,21 @@ import { BatchToPageTranslator } from '@writetome51/batch-to-page-translator';
 import { not } from '@writetome51/not';
 
 
-export class PageBatchGetter {
+/******************************
+ This is intended to be used by a paginator.
+ Loads a batch (array) of data from a larger set that is too big to be loaded all at once.
+ It figures out what batch to load based on a requested page number.
+
+ The class is named unusually because it will read better when calling its methods.
+ Example:
+
+ let getPageBatch = new GetPageBatch();
+ let batch1 = getPageBatch.containingPage(1);
+ batch1 = getPageBatch.byForce_containingPage(1);
+ ******************************/
+
+
+export class GetPageBatch {
 
 
 	private __currentBatch: any[];
@@ -24,16 +38,16 @@ export class PageBatchGetter {
 	}
 
 
-	getBatchContainingPage(pageNumber): any[] {
+	containingPage(pageNumber): any[] {
 		if (not(this.__bch2pgTranslator.currentBatchContainsPage(pageNumber))) {
 
-			return this.forceGetBatchContainingPage(pageNumber);
+			return this.byForce_containingPage(pageNumber);
 		}
 		else return this.__currentBatch;
 	}
 
 
-	forceGetBatchContainingPage(pageNumber): any[] {
+	byForce_containingPage(pageNumber): any[] {
 		this.__bch2pgTranslator.set_currentBatchNumber_toBatchContainingPage(pageNumber);
 
 		this.__currentBatch = this.__dataSource.getBatch(
