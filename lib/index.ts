@@ -1,4 +1,5 @@
 import { BatchToPageTranslator } from '@writetome51/batch-to-page-translator';
+import { not } from '@writetome51/not';
 import { setArray } from '@writetome51/set-array';
 
 
@@ -9,9 +10,8 @@ export class BatchLoader {
 
 		private __dataSource: {
 
-			// `getBatch()` is called whenever a new batch is loaded.  The number of items it returns
-			// matches `itemsPerBatch`.  If `isLastBatch` is true, it only returns the remaining items
-			// in the dataset, and ignores itemsPerBatch.
+			// The number of items `getBatch()` returns must match `itemsPerBatch`.  If `isLastBatch`
+			// is true, it must only return the remaining items in the dataset and ignore itemsPerBatch.
 
 			getBatch: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
 
@@ -23,8 +23,6 @@ export class BatchLoader {
 
 		private __batchContainer: { data: any[] },
 
-		// `__batchInfo` tells this.__dataSource what batch to fetch.
-
 		private __batchInfo: {
 			itemsPerBatch: number, currentBatchNumber: number,
 			currentBatchNumberIsLast: boolean, pagesPerBatch: number
@@ -35,16 +33,15 @@ export class BatchLoader {
 	}
 
 
-	loadBatch(batchNumber): void {
-		let firstPageInBatch = (
-			(this.__batchInfo.pagesPerBatch * batchNumber)
-			- (this.__batchInfo.pagesPerBatch - 1)
-		);
-		this.loadBatchContainingPage(firstPageInBatch);
+	loadBatchContainingPage(pageNumber): void {
+		if (not(this.__bch2pgTranslator.currentBatchContainsPage(pageNumber))) {
+
+			this.forceLoadBatchContainingPage(pageNumber);
+		}
 	}
 
 
-	loadBatchContainingPage(pageNumber): void {
+	forceLoadBatchContainingPage(pageNumber): void {
 		let batch = this.__getBatchContainingPage(pageNumber);
 		setArray(this.__batchContainer.data, batch);
 	}
@@ -57,6 +54,16 @@ export class BatchLoader {
 			this.__batchInfo.currentBatchNumber,
 			this.__batchInfo.itemsPerBatch,
 			this.__batchInfo.currentBatchNumberIsLast
+		);
+	}
+
+
+	/////////////////////////
+
+	private __getFirstPageInBatch(batchNumber): number {
+		return (
+			(this.__batchInfo.pagesPerBatch * batchNumber)
+			- (this.__batchInfo.pagesPerBatch - 1)
 		);
 	}
 
