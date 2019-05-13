@@ -56,6 +56,7 @@ byForce_containingPage(pageNumber): any[]
 	// loads and returns batch containing `pageNumber` even if it is already 
 	// loaded.
 ```
+</details>
 
 
 ## Installation
