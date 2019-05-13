@@ -48,15 +48,15 @@ constructor(
 
 ```ts
 containingPage(pageNumber): any[]
-	// loads and returns batch containing `pageNumber`.
-	// If the currently loaded batch already contains that page, it skips the 
-	// loading and simply returns the batch.
+    // loads and returns batch containing `pageNumber`.
+    // If the currently loaded batch already contains that page, it skips the 
+    // loading and simply returns the batch.
 
 byForce_containingPage(pageNumber): any[] 
-	// loads and returns batch containing `pageNumber` even if it is already 
-	// loaded.
+    // loads and returns batch containing `pageNumber` even if it is already 
+    // loaded.
 ```
-</details>
+</details>  
 
 
 ## Installation
