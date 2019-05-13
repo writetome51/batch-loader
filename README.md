@@ -1,6 +1,17 @@
 # GetPageBatch
 
-A TypeScript/Javascript class...
+A TypeScript/Javascript class intended to be used by a paginator. Its methods load  
+a batch (array) of data from a larger set that is too big to be loaded all at once. Each  
+batch contains multiple pages of data. The methods figure out what batch to load  
+based on a requested page number.
+
+This example illustrates why this class was named like a verb and not a noun:
+```ts
+ let getPageBatch = new GetPageBatch(...args);
+ let batch1 = getPageBatch.containingPage(1);
+ batch1 = getPageBatch.byForce_containingPage(1); // force-reloads the batch.
+```
+
 
 ## Constructor
 <details>
@@ -8,7 +19,24 @@ A TypeScript/Javascript class...
 
 ```ts
 constructor(
-  
+    dataSource: {
+
+        getBatch: (
+            batchNumber: number, itemsPerBatch: number, isLastBatch: boolean
+        ) => any[];
+            // The number of items `getBatch()` returns must match `itemsPerBatch`.
+            // If `isLastBatch` is true, it must only return the remaining items 
+            // in the dataset and ignore itemsPerBatch.
+    },
+
+    batchInfo: {
+        currentBatchNumber: number, itemsPerBatch: number, 
+        currentBatchNumberIsLast: boolean
+    },
+
+    bch2pgTranslator: BatchToPageTranslator
+        // Automatically included as a dependency.
+        // https://www.npmjs.com/package/@writetome51/batch-to-page-translator
 ) 
 ```
 </details>
@@ -19,7 +47,14 @@ constructor(
 <summary>view methods</summary>
 
 ```ts
+containingPage(pageNumber): any[]
+	// loads and returns batch containing `pageNumber`.
+	// If the currently loaded batch already contains that page, it skips the 
+	// loading and simply returns the batch.
 
+byForce_containingPage(pageNumber): any[] 
+	// loads and returns batch containing `pageNumber` even if it is already 
+	// loaded.
 ```
 
 

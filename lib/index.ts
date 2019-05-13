@@ -4,12 +4,13 @@ import { not } from '@writetome51/not';
 
 /******************************
  This is intended to be used by a paginator.
- Loads a batch (array) of data from a larger set that is too big to be loaded all at once.
- It figures out what batch to load based on a requested page number.
+ Its methods load a batch (array) of data from a larger set that is too big to be loaded all at
+ once. Each batch contains multiple pages of data. The methods figure out what batch to load based
+ on a requested page number.
 
  Usage Example:
 
- let getPageBatch = new GetPageBatch();
+ let getPageBatch = new GetPageBatch(...args);
  let batch1 = getPageBatch.containingPage(1);
  batch1 = getPageBatch.byForce_containingPage(1); // force-reloads the batch.
  ******************************/
