@@ -23,7 +23,9 @@ export declare class GetPageBatch {
 
 	constructor(
 		__dataSource: {
-			getBatch: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
+			getBatch: (
+				batchNumber: number, itemsPerBatch: number, isLastBatch: boolean
+			) => Promise<any[]>;
 		},
 		__batchInfo: {
 			currentBatchNumber: number;
@@ -34,9 +36,9 @@ export declare class GetPageBatch {
 	);
 
 
-	containingPage(pageNumber: number): any[];
+	containingPage(pageNumber: number): Promise<any[]>;
 
 
-	byForce_containingPage(pageNumber: number): any[];
+	byForce_containingPage(pageNumber: number): Promise<any[]>;
 
 }

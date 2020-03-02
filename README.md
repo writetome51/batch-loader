@@ -8,8 +8,8 @@ based on a requested page number.
 This example illustrates why this class was named like a verb and not a noun:
 ```ts
  let getPageBatch = new GetPageBatch(...args);
- let batch1 = getPageBatch.containingPage(1);
- batch1 = getPageBatch.byForce_containingPage(1); // force-reloads the batch.
+ let batch1 = await getPageBatch.containingPage(1);
+ batch1 = await getPageBatch.byForce_containingPage(1); // force-reloads the batch.
 ```
 
 
@@ -23,7 +23,7 @@ constructor(
 
         getBatch: (
             batchNumber: number, itemsPerBatch: number, isLastBatch: boolean
-        ) => any[];
+        ) => Promise<any[]>;
             // The number of items `getBatch()` returns must match `itemsPerBatch`.
             // If `isLastBatch` is true, it must only return the remaining items 
             // in the dataset and ignore itemsPerBatch.
@@ -35,7 +35,7 @@ constructor(
     },
 
     bch2pgTranslator: BatchToPageTranslator
-        // Automatically included as a dependency.
+        // Automatically installed with this package.
         // https://www.npmjs.com/package/@writetome51/batch-to-page-translator
 ) 
 ```
@@ -47,12 +47,12 @@ constructor(
 <summary>view methods</summary>
 
 ```ts
-containingPage(pageNumber): any[]
+async containingPage(pageNumber): Promise<any[]>
     // loads and returns batch containing `pageNumber`.
     // If the currently loaded batch already contains that page, it skips the 
     // loading and simply returns the batch.
 
-byForce_containingPage(pageNumber): any[] 
+async byForce_containingPage(pageNumber): Promise<any[]> 
     // loads and returns batch containing `pageNumber` even if it is already 
     // loaded.
 ```

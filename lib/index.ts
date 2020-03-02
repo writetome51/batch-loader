@@ -28,22 +28,26 @@ export class GetPageBatch {
 			// The number of items `getBatch()` returns must match `itemsPerBatch`.  If `isLastBatch`
 			// is true, it must only return the remaining items in the dataset and ignore itemsPerBatch.
 
-			getBatch: (batchNumber: number, itemsPerBatch: number, isLastBatch: boolean) => any[];
+			getBatch: (
+				batchNumber: number, itemsPerBatch: number, isLastBatch: boolean
+			) => Promise<any[]>;
 		},
 
 		private __batchInfo: {
 			currentBatchNumber: number, itemsPerBatch: number, currentBatchNumberIsLast: boolean
 		},
 
+		// Must contain same instance of this.__batchInfo
+
 		private __bch2pgTranslator: BatchToPageTranslator
 	) {
 	}
 
 
-	containingPage(pageNumber): any[] {
+	async containingPage(pageNumber): Promise<any[]> {
 		if (not(this.__bch2pgTranslator.currentBatchContainsPage(pageNumber))) {
 
-			return this.byForce_containingPage(pageNumber);
+			return await this.byForce_containingPage(pageNumber);
 		}
 		else return this.__currentBatch;
 	}
@@ -51,10 +55,10 @@ export class GetPageBatch {
 
 	// Does not check if batch containing `pageNumber` is already loaded.
 
-	byForce_containingPage(pageNumber): any[] {
+	async byForce_containingPage(pageNumber): Promise<any[]> {
 		this.__bch2pgTranslator.set_currentBatchNumber_toBatchContainingPage(pageNumber);
 
-		this.__currentBatch = this.__dataSource.getBatch(
+		this.__currentBatch = await this.__dataSource.getBatch(
 			this.__batchInfo.currentBatchNumber,
 			this.__batchInfo.itemsPerBatch,
 			this.__batchInfo.currentBatchNumberIsLast

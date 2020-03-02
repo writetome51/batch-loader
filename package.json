@@ -1,6 +1,6 @@
 {
   "name": "@writetome51/get-page-batch",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A class that loads a batch (array) of data from a larger set too big to be loaded all at once.  You tell it what page you want, and it loads the batch containing that page.  Intended to be used by a paginator",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
