@@ -1,6 +1,6 @@
 {
   "name": "@writetome51/get-page-batch",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "A class that loads a batch (array) of data from a larger set too big to be loaded all at once.  You tell it what page you want, and it loads the batch containing that page.  Intended to be used by a paginator",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -30,7 +30,7 @@
   "homepage": "https://github.com/writetome51/get-page-batch#readme",
   "devDependencies": {},
   "dependencies": {
-    "@writetome51/batch-to-page-translator": "~0.0.2",
-    "@writetome51/not": "~1.0.5"
+    "@writetome51/batch-to-page-translator": "^1.0.0",
+    "@writetome51/not": "^1.0.5"
   }
 }
