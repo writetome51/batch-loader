@@ -1,8 +1,8 @@
 # PageLoadAccess
 
-A TypeScript/Javascript class intended to be used by a paginator. Its methods return 
-a load (array) of data from a larger set that is too big to be loaded all at once. Each  
-load can contain multiple pages of data.
+A TypeScript/Javascript class intended to be used by a paginator. Its methods  
+return a load (array) of data from a larger set that is too big to be loaded  
+all at once. Each load can contain multiple pages of data.
 
 
 ## Constructor
