@@ -1,44 +1,38 @@
-import { BatchToPageTranslator } from '@writetome51/batch-to-page-translator';
+import { LoadToPageTranslator } from '@writetome51/load-to-page-translator';
 
 
 /******************************
  This is intended to be used by a paginator.
- Loads a batch (array) of data from a larger set that is too big to be loaded all at once.
- It figures out what batch to load based on a requested page number.
-
- Usage Example:
-
- let getPageBatch = new GetPageBatch();
- let batch1 = getPageBatch.containingPage(1);
- batch1 = getPageBatch.byForce_containingPage(1); // force-reloads the batch.
+ Its methods return a load (array) of data from a larger set that is too big to be
+ loaded all at once.  Each load can contain multiple pages of data.
  ******************************/
 
-export declare class GetPageBatch {
+export declare class PageLoadAccess {
 
 	private __dataSource;
-	private __batchInfo;
-	private __bch2pgTranslator;
-	private __currentBatch;
+	private __loadInfo;
+	private __load2pgTranslator;
+	private __currentLoad;
 
 
 	constructor(
 		__dataSource: {
-			getBatch: (
-				batchNumber: number, itemsPerBatch: number, isLastBatch: boolean
+			getLoad: (
+				loadNumber: number, itemsPerLoad: number, isLastLoad: boolean
 			) => Promise<any[]>;
 		},
-		__batchInfo: {
-			currentBatchNumber: number;
-			itemsPerBatch: number;
-			currentBatchNumberIsLast: boolean;
+		__loadInfo: {
+			getCurrentLoadNumber: () => number;
+			setCurrentLoadNumber: (num: number) => void;
+			getItemsPerLoad: () => number;
+			currentLoadIsLast: () => boolean;
 		},
-		__bch2pgTranslator: BatchToPageTranslator
+		__load2pgTranslator: LoadToPageTranslator
 	);
 
 
-	containingPage(pageNumber: number): Promise<any[]>;
+	getLoadContainingPage(pageNumber: number): Promise<any[]>;
 
 
-	byForce_containingPage(pageNumber: number): Promise<any[]>;
-
+	getRefreshedLoadContainingPage(pageNumber: number): Promise<any[]>;
 }

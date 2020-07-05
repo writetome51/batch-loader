@@ -1,16 +1,8 @@
-# GetPageBatch
+# PageLoadAccess
 
-A TypeScript/Javascript class intended to be used by a paginator. Its methods load  
-a batch (array) of data from a larger set that is too big to be loaded all at once. Each  
-batch contains multiple pages of data. The methods figure out what batch to load  
-based on a requested page number.
-
-This example illustrates why this class was named like a verb and not a noun:
-```ts
- let getPageBatch = new GetPageBatch(...args);
- let batch1 = await getPageBatch.containingPage(1);
- batch1 = await getPageBatch.byForce_containingPage(1); // force-reloads the batch.
-```
+A TypeScript/Javascript class intended to be used by a paginator. Its methods return 
+a load (array) of data from a larger set that is too big to be loaded all at once. Each  
+load can contain multiple pages of data.
 
 
 ## Constructor
@@ -19,25 +11,26 @@ This example illustrates why this class was named like a verb and not a noun:
 
 ```ts
 constructor(
-    dataSource: {
+    __dataSource: {
 
-        getBatch: (
-            batchNumber: number, itemsPerBatch: number, isLastBatch: boolean
-        ) => Promise<any[]>;
-            // The number of items `getBatch()` returns must match `itemsPerBatch`.
-            // If `isLastBatch` is true, it must only return the remaining items 
-            // in the dataset and ignore itemsPerBatch.
+        // The number of items `getLoad()` returns must match `itemsPerLoad`.
+        // If `isLastLoad` is true, it must only return the remaining items 
+        // in the dataset and ignore itemsPerLoad.
+
+        getLoad: (
+            loadNumber: number, itemsPerLoad: number, isLastLoad: boolean
+        ) => Promise<any[]>
     },
 
-    batchInfo: {
-        currentBatchNumber: number, itemsPerBatch: number, 
-        currentBatchNumberIsLast: boolean
+    __loadInfo: {
+        getCurrentLoadNumber: () => number,
+        setCurrentLoadNumber: (num: number) => void,
+        getItemsPerLoad: () => number,
+        currentLoadIsLast: () => boolean
     },
 
-    bch2pgTranslator: BatchToPageTranslator
-        // Automatically installed with this package.
-        // https://www.npmjs.com/package/@writetome51/batch-to-page-translator
-) 
+    __load2pgTranslator: LoadToPageTranslator
+)
 ```
 </details>
 
@@ -47,28 +40,25 @@ constructor(
 <summary>view methods</summary>
 
 ```ts
-async containingPage(pageNumber): Promise<any[]>
-    // loads and returns batch containing `pageNumber`.
-    // If the currently loaded batch already contains that page, it skips the 
-    // loading and simply returns the batch.
+async getLoadContainingPage(pageNumber): Promise<any[]>
 
-async byForce_containingPage(pageNumber): Promise<any[]> 
-    // loads and returns batch containing `pageNumber` even if it is already 
-    // loaded.
+async getRefreshedLoadContainingPage(pageNumber): Promise<any[]> 
+    // Even if the current load already contains requested 
+    // `pageNumber`, that load is re-retrieved from the data source.
 ```
 </details>  
 
 
 ## Installation
 
-`npm i  @writetome51/get-page-batch`
+`npm i  @writetome51/page-load-access`
 
 ## Loading
 ```ts
 // if using TypeScript:
-import { GetPageBatch } from '@writetome51/get-page-batch';
+import { PageLoadAccess } from '@writetome51/page-load-access';
 // if using ES5 JavaScript:
-var GetPageBatch = require('@writetome51/get-page-batch').GetPageBatch;
+var PageLoadAccess = require('@writetome51/page-load-access').PageLoadAccess;
 ```
 
 ## License

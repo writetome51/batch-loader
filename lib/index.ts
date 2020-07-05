@@ -1,69 +1,60 @@
-import { BatchToPageTranslator } from '@writetome51/batch-to-page-translator';
-import { not } from '@writetome51/not';
+import { LoadToPageTranslator } from '@writetome51/load-to-page-translator';
 
 
 /******************************
  This is intended to be used by a paginator.
- Its methods load a batch (array) of data from a larger set that is too big to be loaded all at
- once. Each batch contains multiple pages of data. The methods figure out what batch to load based
- on a requested page number.
-
- Usage Example:
-
- let getPageBatch = new GetPageBatch(...args);
- let batch1 = getPageBatch.containingPage(1);
- batch1 = getPageBatch.byForce_containingPage(1); // force-reloads the batch.
+ Its methods return a load (array) of data from a larger set that is too big to be
+ loaded all at once.  Each load can contain multiple pages of data.
  ******************************/
 
+export class PageLoadAccess {
 
-export class GetPageBatch {
 
-
-	private __currentBatch: any[];
+	private __currentLoad: any[];
 
 
 	constructor(
 		private __dataSource: {
 
-			// The number of items `getBatch()` returns must match `itemsPerBatch`.  If `isLastBatch`
-			// is true, it must only return the remaining items in the dataset and ignore itemsPerBatch.
+			// The number of items `getLoad()` returns must match `itemsPerLoad`.  If `isLastLoad`
+			// is true, it must only return the remaining items in the dataset and ignore itemsPerLoad.
 
-			getBatch: (
-				batchNumber: number, itemsPerBatch: number, isLastBatch: boolean
+			getLoad: (
+				loadNumber: number, itemsPerLoad: number, isLastLoad: boolean
 			) => Promise<any[]>;
 		},
 
-		private __batchInfo: {
-			currentBatchNumber: number, itemsPerBatch: number, currentBatchNumberIsLast: boolean
+		private __loadInfo: {
+			getCurrentLoadNumber: () => number, setCurrentLoadNumber: (num: number) => void,
+			getItemsPerLoad: () => number, currentLoadIsLast: () => boolean
 		},
 
-		// Must contain same instance of this.__batchInfo
-
-		private __bch2pgTranslator: BatchToPageTranslator
+		private __load2pgTranslator: LoadToPageTranslator
 	) {
 	}
 
 
-	async containingPage(pageNumber): Promise<any[]> {
-		if (not(this.__bch2pgTranslator.currentBatchContainsPage(pageNumber))) {
-
-			return await this.byForce_containingPage(pageNumber);
+	async getLoadContainingPage(pageNumber): Promise<any[]> {
+		if (this.__load2pgTranslator.loadContainsPage(
+			pageNumber, this.__loadInfo.getCurrentLoadNumber()
+		)) {
+			return this.__currentLoad;
 		}
-		else return this.__currentBatch;
+		else return await this.getRefreshedLoadContainingPage(pageNumber);
 	}
 
 
-	// Does not check if batch containing `pageNumber` is already loaded.
-
-	async byForce_containingPage(pageNumber): Promise<any[]> {
-		this.__bch2pgTranslator.set_currentBatchNumber_toBatchContainingPage(pageNumber);
-
-		this.__currentBatch = await this.__dataSource.getBatch(
-			this.__batchInfo.currentBatchNumber,
-			this.__batchInfo.itemsPerBatch,
-			this.__batchInfo.currentBatchNumberIsLast
+	async getRefreshedLoadContainingPage(pageNumber): Promise<any[]> {
+		this.__loadInfo.setCurrentLoadNumber(
+			this.__load2pgTranslator.getLoadNumberContainingPage(pageNumber)
 		);
-		return this.__currentBatch;
+
+		this.__currentLoad = await this.__dataSource.getLoad(
+			this.__loadInfo.getCurrentLoadNumber(),
+			this.__loadInfo.getItemsPerLoad(),
+			this.__loadInfo.currentLoadIsLast()
+		);
+		return this.__currentLoad;
 	}
 
 
